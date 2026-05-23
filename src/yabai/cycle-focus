@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export PATH="${PATH}:@jq@/bin:@yabai@/bin"
 
 dir="${1:-}"
 case "$dir" in
@@ -10,36 +11,32 @@ esac
 cur_json=$(yabai -m query --windows --window)
 is_floating=$(echo "$cur_json" | jq -r '."is-floating"')
 
-if [ "$is_floating" = "true" ]; then
-  # Spatial focus for floating windows
-  cur_id=$(echo "$cur_json" | jq -r '.id')
-  target=$(yabai -m query --windows --space | jq -r --argjson cur "$cur_json" --argjson cid "$cur_id" --arg dir "$dir" '
-    def dist(a;b): (a - b) * (a - b);
-    [.[] | select(.id != $cid and .visible == 1)]
-    | map(select(
-        ($dir == "west"  and .frame.x + .frame.w <= $cur.frame.x) or
-        ($dir == "east"  and .frame.x >= $cur.frame.x + $cur.frame.w) or
-        ($dir == "north" and .frame.y + .frame.h <= $cur.frame.y) or
-        ($dir == "south" and .frame.y >= $cur.frame.y + $cur.frame.h)
-      ))
-    | sort_by(
-        if $dir == "west" or $dir == "east" then
-          dist($cur.frame.x + $cur.frame.w/2; .frame.x + .frame.w/2) * 4 +
-          dist($cur.frame.y + $cur.frame.h/2; .frame.y + .frame.h/2)
-        else
-          dist($cur.frame.x + $cur.frame.w/2; .frame.x + .frame.w/2) +
-          dist($cur.frame.y + $cur.frame.h/2; .frame.y + .frame.h/2) * 4
-        end
-      )
-    | first?.id // empty
-  ')
+cur_id=$(echo "$cur_json" | jq -r '.id')
+cx=$(echo "$cur_json" | jq '.frame.x + .frame.w / 2')
+cy=$(echo "$cur_json" | jq '.frame.y + .frame.h / 2')
+
+# Helper: spatial focus (works for both floating and tiled targets)
+spatial_focus() {
+  all=$(yabai -m query --windows --space)
+  target=$(echo "$all" | jq -r \
+    --argjson cid "$cur_id" \
+    --argjson cx "$cx" \
+    --argjson cy "$cy" \
+    --arg dir "$dir" \
+    '[.[]|select(.id!=$cid and .["is-visible"]==true)]|map(select(($dir=="west" and .frame.x+.frame.w/2<$cx)or($dir=="east" and .frame.x+.frame.w/2>$cx)or($dir=="north" and .frame.y+.frame.h/2<$cy)or($dir=="south" and .frame.y+.frame.h/2>$cy)))|sort_by(if $dir=="west"or $dir=="east"then(($cx-(.frame.x+.frame.w/2))*($cx-(.frame.x+.frame.w/2)))*4+(($cy-(.frame.y+.frame.h/2))*($cy-(.frame.y+.frame.h/2)))else(($cx-(.frame.x+.frame.w/2))*($cx-(.frame.x+.frame.w/2)))+(($cy-(.frame.y+.frame.h/2))*($cy-(.frame.y+.frame.h/2)))*4 end)|.[0].id//empty')
   [ -n "$target" ] && yabai -m window --focus "$target"
+}
+
+if [ "$is_floating" = "true" ]; then
+  spatial_focus
 else
-  # Built-in directional focus for tiled windows
+  # Try built-in BSP focus first
   if yabai -m window --focus "$dir" 2>/dev/null; then
     exit 0
   fi
-  # Fallback: display focus for east/west
+  # BSP failed — maybe a floating window is there
+  spatial_focus
+  # Still nothing — fall back to display
   case "$dir" in
     east|west) yabai -m display --focus "$dir" ;;
   esac
