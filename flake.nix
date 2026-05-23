@@ -118,32 +118,47 @@
               monitor = mkShellApplication "monitor" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/monitor);
 
               # yabai (macOS tiling WM helpers)
-              yabai-space-cycle = mkShellApplication "space-cycle" [ pkgs.jq ] (
-                builtins.readFile ./src/yabai/space-cycle
+              yabai-space-cycle = mkShellApplication "space-cycle" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/space-cycle);
+              yabai-next-display-idx = mkShellApplication "next-display-idx" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/next-display-idx);
+              yabai-cycle-display = mkShellApplication "cycle-display" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/cycle-display);
+              yabai-cycle-move-display = mkShellApplication "cycle-move-display" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/cycle-move-display);
+              yabai-cycle-focus = mkShellApplication "cycle-focus" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/cycle-focus);
+              yabai-cycle-move = mkShellApplication "cycle-move" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/cycle-move);
+              yabai-focus-window = mkShellApplication "focus-window" (with pkgs; [
+                jq
+                choose
+                yabai
+              ]) (builtins.readFile ./src/yabai/focus-window);
+              yabai-get-window = mkShellApplication "get-window" (with pkgs; [
+                jq
+                choose
+                yabai
+              ]) (builtins.readFile ./src/yabai/get-window);
+              yabai-warp-cursor = mkShellApplication "warp-cursor" (with pkgs; [
+                jq
+                yabai
+              ]) (builtins.readFile ./src/yabai/warp-cursor);
+              yabai-toggle-app = mkShellApplication "toggle-app" (with pkgs; [ yabai ]) (
+                builtins.readFile ./src/yabai/toggle-app
               );
-              yabai-next-display-idx = next-display-idx;
-              yabai-cycle-display = mkShellApplication "cycle-display" [ pkgs.jq next-display-idx ] (
-                builtins.readFile ./src/yabai/cycle-display
-              );
-              yabai-cycle-move-display = mkShellApplication "cycle-move-display" [ pkgs.jq next-display-idx ] (
-                builtins.readFile ./src/yabai/cycle-move-display
-              );
-              yabai-cycle-focus = mkShellApplication "cycle-focus" [ pkgs.jq ] (
-                builtins.readFile ./src/yabai/cycle-focus
-              );
-              yabai-cycle-move = mkShellApplication "cycle-move" [ pkgs.jq ] (
-                builtins.readFile ./src/yabai/cycle-move
-              );
-              yabai-focus-window = mkShellApplication "focus-window" [ pkgs.jq pkgs.choose-gui ] (
-                builtins.readFile ./src/yabai/focus-window
-              );
-              yabai-get-window = mkShellApplication "get-window" [ pkgs.jq pkgs.choose-gui ] (
-                builtins.readFile ./src/yabai/get-window
-              );
-              yabai-warp-cursor = mkShellApplication "warp-cursor" [ pkgs.jq ] (
-                builtins.readFile ./src/yabai/warp-cursor
-              );
-              yabai-toggle-app = mkShellApplication "toggle-app" [ ] (builtins.readFile ./src/yabai/toggle-app);
 
               walogram = pkgs.callPackage ./src/walogram { };
               walogram-test = (pkgs.callPackage ./src/walogram { }).override {
