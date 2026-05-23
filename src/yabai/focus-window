@@ -2,7 +2,7 @@
 set -euo pipefail
 
 choice=$(yabai -m query --windows \
-  | jq -r '.[] | select(.app | endswith("-wrapped") | not) | "\(.id)|[\(.space)] \(.app): \(.title)"' \
+  | jq -r '.[] | select(.app | endswith("-wrapped") | not) | "\(.id)|\(.app): \(.title)"' \
   | awk -F'|' '{print $2 "\t" $1}' \
   | choose -n 15 -w 120 -f "Monaspace Radon Var" -s 26 -c FF9800 -b a9a9a9 -p "󰖰  Focus window:")
 
