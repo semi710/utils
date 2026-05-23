@@ -9,4 +9,8 @@ choice=$(yabai -m query --windows \
 id=$(echo "$choice" | awk '{print $NF}')
 app=$(echo "$choice" | awk -F':' '{print $1}' | sed 's/^\[[0-9]*\] //')
 
-[ -n "$id" ] && yabai -m window --focus "$id" || open -a "$app"
+if [ -n "$id" ]; then
+  yabai -m window --focus "$id"
+else
+  open -a "$app"
+fi
