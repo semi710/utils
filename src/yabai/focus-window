@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+choice=$(yabai -m query --windows \
+  | jq -r '.[] | select(.app | endswith("-wrapped") | not) | "\(.id)|[\(.space)] \(.app): \(.title)"' \
+  | awk -F'|' '{print $2 "\t" $1}' \
+  | choose-gui -n 15 -w 120 -f "Monaspace Radon Var" -s 26 -c FF9800 -b a9a9a9 -p "󰖰  Focus window:")
+
+id=$(echo "$choice" | awk '{print $NF}')
+app=$(echo "$choice" | awk -F':' '{print $1}' | sed 's/^\[[0-9]*\] //')
+
+[ -n "$id" ] && yabai -m window --focus "$id" || open -a "$app"

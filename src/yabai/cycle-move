@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${1:-}"
+
+cur_json=$(yabai -m query --windows --window)
+is_floating=$(echo "$cur_json" | jq -r '."is-floating"')
+
+if [ "$is_floating" = "true" ]; then
+  case "$dir" in
+    west)  yabai -m window --move rel:-20:0 ;;
+    east)  yabai -m window --move rel:20:0 ;;
+    north) yabai -m window --move rel:0:-20 ;;
+    south) yabai -m window --move rel:0:20 ;;
+  esac
+else
+  yabai -m window --warp "$dir" 2>/dev/null || true
+fi

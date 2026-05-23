@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+yabai -m query --windows --window \
+  | jq -r '.frame | "hs.mouse.absolutePosition({x=\(.x + .w/2), y=\(.y + .h/2)})"' \
+  | xargs -I{} osascript -e 'tell application "Hammerspoon" to execute lua code "{}"'

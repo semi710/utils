@@ -47,80 +47,114 @@
           });
 
           pre-commit.settings.hooks.nixfmt-rfc-style.enable = true;
-          packages = {
-            center-align = inputs'.center-align.packages.default;
-            bstat = inputs'.bstat.packages.default;
-            fast = mkShellApplication "fast" [ pkgs.jq ] (builtins.readFile ./src/hypr/fast);
+          packages =
+            let
+              next-display-idx = mkShellApplication "next-display-idx" [ pkgs.jq ] (
+                builtins.readFile ./src/yabai/next-display-idx
+              );
+            in
+            {
+              center-align = inputs'.center-align.packages.default;
+              bstat = inputs'.bstat.packages.default;
+              fast = mkShellApplication "fast" [ pkgs.jq ] (builtins.readFile ./src/hypr/fast);
 
-            icpu = mkShellApplication "icpu" [ pkgs.sysstat pkgs.lm_sensors ] (builtins.readFile ./src/icpu);
+              icpu = mkShellApplication "icpu" [ pkgs.sysstat pkgs.lm_sensors ] (builtins.readFile ./src/icpu);
 
-            img-annotate = mkShellApplication "img-annotate" (with pkgs; [
-              libnotify
-              wl-clipboard
-              swappy
-            ]) (builtins.readFile ./src/img-annotate);
+              img-annotate = mkShellApplication "img-annotate" (with pkgs; [
+                libnotify
+                wl-clipboard
+                swappy
+              ]) (builtins.readFile ./src/img-annotate);
 
-            focus = mkShellApplication "focus" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/focus);
+              focus = mkShellApplication "focus" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/focus);
 
-            move = mkShellApplication "move" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/move);
+              move = mkShellApplication "move" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/move);
 
-            fullscreen = mkShellApplication "fullscreen" (with pkgs; [ jq ]) (
-              builtins.readFile ./src/hypr/fullscreen
-            );
+              fullscreen = mkShellApplication "fullscreen" (with pkgs; [ jq ]) (
+                builtins.readFile ./src/hypr/fullscreen
+              );
 
-            zoom = mkShellApplication "zoom" (with pkgs; [
-              jq
-              bc
-            ]) (builtins.readFile ./src/hypr/zoom);
+              zoom = mkShellApplication "zoom" (with pkgs; [
+                jq
+                bc
+              ]) (builtins.readFile ./src/hypr/zoom);
 
-            toggle-group = mkShellApplication "toggle-group" (with pkgs; [
-              jq
-              libnotify
-            ]) (builtins.readFile ./src/hypr/toggle-group);
+              toggle-group = mkShellApplication "toggle-group" (with pkgs; [
+                jq
+                libnotify
+              ]) (builtins.readFile ./src/hypr/toggle-group);
 
-            lid-down = mkShellApplication "lid-down" (with pkgs; [ jq ]) (
-              builtins.readFile ./src/hypr/lid-down
-            );
+              lid-down = mkShellApplication "lid-down" (with pkgs; [ jq ]) (
+                builtins.readFile ./src/hypr/lid-down
+              );
 
-            volume = mkShellApplication "volume" (with pkgs; [
-              bc
-              jq
-              gawk
-              libnotify
-            ]) (builtins.readFile ./src/volume);
+              volume = mkShellApplication "volume" (with pkgs; [
+                bc
+                jq
+                gawk
+                libnotify
+              ]) (builtins.readFile ./src/volume);
 
-            brightness = mkShellApplication "brightness" (with pkgs; [
-              libnotify
-              brightnessctl
-            ]) (builtins.readFile ./src/brightness);
+              brightness = mkShellApplication "brightness" (with pkgs; [
+                libnotify
+                brightnessctl
+              ]) (builtins.readFile ./src/brightness);
 
-            aerospace-focus-choose = pkgs.callPackage ./src/aerospace/default.nix { };
-            aerospace-focus-fzf = mkShellApplication "aerospace-focus-fzf" (with pkgs; [
-              fzf
-            ]) (builtins.readFile ./src/aerospace/aero.focus.sh);
+              aerospace-focus-choose = pkgs.callPackage ./src/aerospace/default.nix { };
+              aerospace-focus-fzf = mkShellApplication "aerospace-focus-fzf" (with pkgs; [
+                fzf
+              ]) (builtins.readFile ./src/aerospace/aero.focus.sh);
 
-            quick-term = mkShellApplication "quick-term" (with pkgs; [
-              foot
-              jq
-              tmux
-            ]) (builtins.readFile ./src/hypr/quick-term);
+              quick-term = mkShellApplication "quick-term" (with pkgs; [
+                foot
+                jq
+                tmux
+              ]) (builtins.readFile ./src/hypr/quick-term);
 
-            myip = mkShellApplication "myip" (with pkgs; [ dnsutils ]) (builtins.readFile ./src/myip);
+              myip = mkShellApplication "myip" (with pkgs; [ dnsutils ]) (builtins.readFile ./src/myip);
 
-            cat = mkShellApplication "cat" (with pkgs; [ bat ]) (builtins.readFile ./src/cat);
+              cat = mkShellApplication "cat" (with pkgs; [ bat ]) (builtins.readFile ./src/cat);
 
-            monitor = mkShellApplication "monitor" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/monitor);
+              monitor = mkShellApplication "monitor" (with pkgs; [ jq ]) (builtins.readFile ./src/hypr/monitor);
 
-            walogram = pkgs.callPackage ./src/walogram { };
-            walogram-test = (pkgs.callPackage ./src/walogram { }).override {
-              image = "/nix/store/1mfdyd874ib7rzn2y7gflhnpfc6gxnja-dock.png";
+              # yabai (macOS tiling WM helpers)
+              yabai-space-cycle = mkShellApplication "space-cycle" [ pkgs.jq ] (
+                builtins.readFile ./src/yabai/space-cycle
+              );
+              yabai-next-display-idx = next-display-idx;
+              yabai-cycle-display = mkShellApplication "cycle-display" [ pkgs.jq next-display-idx ] (
+                builtins.readFile ./src/yabai/cycle-display
+              );
+              yabai-cycle-move-display = mkShellApplication "cycle-move-display" [ pkgs.jq next-display-idx ] (
+                builtins.readFile ./src/yabai/cycle-move-display
+              );
+              yabai-cycle-focus = mkShellApplication "cycle-focus" [ pkgs.jq ] (
+                builtins.readFile ./src/yabai/cycle-focus
+              );
+              yabai-cycle-move = mkShellApplication "cycle-move" [ pkgs.jq ] (
+                builtins.readFile ./src/yabai/cycle-move
+              );
+              yabai-focus-window = mkShellApplication "focus-window" [ pkgs.jq pkgs.choose-gui ] (
+                builtins.readFile ./src/yabai/focus-window
+              );
+              yabai-get-window = mkShellApplication "get-window" [ pkgs.jq pkgs.choose-gui ] (
+                builtins.readFile ./src/yabai/get-window
+              );
+              yabai-warp-cursor = mkShellApplication "warp-cursor" [ pkgs.jq ] (
+                builtins.readFile ./src/yabai/warp-cursor
+              );
+              yabai-toggle-app = mkShellApplication "toggle-app" [ ] (builtins.readFile ./src/yabai/toggle-app);
+
+              walogram = pkgs.callPackage ./src/walogram { };
+              walogram-test = (pkgs.callPackage ./src/walogram { }).override {
+                image = "/nix/store/1mfdyd874ib7rzn2y7gflhnpfc6gxnja-dock.png";
+              };
+              powermenu-rofi = pkgs.callPackage ./src/rofi/powermenu/default.nix { };
+              menus = pkgs.callPackage ./src/rofi/menus/default.nix { inherit inputs; };
+              fullmenu = pkgs.callPackage ./src/rofi/fullmenu/default.nix { };
+              clients = pkgs.callPackage ./src/hypr/clients/default.nix { };
+              waybar-utils = pkgs.callPackage ./src/waybar/default.nix { };
             };
-            powermenu-rofi = pkgs.callPackage ./src/rofi/powermenu/default.nix { };
-            menus = pkgs.callPackage ./src/rofi/menus/default.nix { inherit inputs; };
-            fullmenu = pkgs.callPackage ./src/rofi/fullmenu/default.nix { };
-            clients = pkgs.callPackage ./src/hypr/clients/default.nix { };
-            waybar-utils = pkgs.callPackage ./src/waybar/default.nix { };
-          };
         };
     };
 }

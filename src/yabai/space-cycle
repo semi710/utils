@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${1:-next}"
+
+info=$(yabai -m query --spaces --display)
+count=$(echo "$info" | jq 'length')
+[ "$count" -eq 0 ] && exit 0
+
+case "$dir" in
+  next)
+    last=$(echo "$info" | jq '.[-1]."has-focus"')
+    if [ "$last" = "false" ]; then
+      yabai -m space --focus next
+    else
+      idx=$(echo "$info" | jq -r '.[0].index')
+      yabai -m space --focus "$idx"
+    fi
+    ;;
+  prev)
+    first=$(echo "$info" | jq '.[0]."has-focus"')
+    if [ "$first" = "false" ]; then
+      yabai -m space --focus prev
+    else
+      idx=$(echo "$info" | jq -r '.[-1].index')
+      yabai -m space --focus "$idx"
+    fi
+    ;;
+esac

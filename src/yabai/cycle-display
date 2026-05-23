@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${1:-next}"
+next_idx=$(next-display-idx "$dir")
+[ -n "$next_idx" ] && yabai -m display --focus "$next_idx"

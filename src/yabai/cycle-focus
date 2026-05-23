@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${1:-}"
+case "$dir" in
+  next) dir="east" ;;
+  prev) dir="west" ;;
+esac
+
+# Try yabai built-in directional focus first
+if yabai -m window --focus "$dir" 2>/dev/null; then
+  exit 0
+fi
+
+# For east/west, fall back to display focus when no window in that direction
+case "$dir" in
+  east|west) yabai -m display --focus "$dir" ;;
+esac

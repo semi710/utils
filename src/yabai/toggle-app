@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+app="$1"
+front_app=$(osascript -e 'tell application "System Events" to name of first application process whose frontmost is true')
+
+if [ "$front_app" = "$app" ]; then
+  # App is focused: hide it
+  osascript -e "tell application \"$app\" to hide"
+else
+  # App not focused: check if running
+  if pgrep -xq "$app" 2>/dev/null; then
+    osascript -e "tell application \"$app\" to activate"
+  else
+    open -a "$app"
+  fi
+fi
