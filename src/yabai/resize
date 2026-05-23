@@ -2,7 +2,7 @@
 set -euo pipefail
 
 direction="$1"
-factor=1.15
+factor=1.01
 
 window=$(yabai -m query --windows --window)
 is_floating=$(echo "$window" | jq -r '.["is-floating"]')
