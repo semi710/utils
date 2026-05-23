@@ -152,6 +152,10 @@
               yabai-toggle-app = mkShellApplication "toggle-app" (with pkgs; [ ]) (
                 builtins.readFile ./src/yabai/toggle-app
               );
+              yabai-resize = mkShellApplication "resize" (with pkgs; [
+                jq
+                bc
+              ]) (builtins.readFile ./src/yabai/resize);
 
               walogram = pkgs.callPackage ./src/walogram { };
               walogram-test = (pkgs.callPackage ./src/walogram { }).override {

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+direction="$1"
+factor=1.15
+
+window=$(yabai -m query --windows --window)
+is_floating=$(echo "$window" | jq -r '.["is-floating"]')
+
+if [ "$is_floating" = "true" ]; then
+  w=$(echo "$window" | jq -r '.frame.w')
+  h=$(echo "$window" | jq -r '.frame.h')
+
+  # Always compute positive delta from the bigger-smaller difference
+  case "$direction" in
+    smaller)
+      dx=$(echo "($w - $w / $factor) / 2" | bc | cut -d. -f1)
+      dy=$(echo "($h - $h / $factor) / 2" | bc | cut -d. -f1)
+      ;;
+    bigger)
+      dx=$(echo "($w * $factor - $w) / 2" | bc | cut -d. -f1)
+      dy=$(echo "($h * $factor - $h) / 2" | bc | cut -d. -f1)
+      ;;
+    *) echo "unknown direction: $direction (use: smaller|bigger)"; exit 1 ;;
+  esac
+
+  # Ensure positive integers
+  dx=$(echo "$dx" | tr -d '-')
+  dy=$(echo "$dy" | tr -d '-')
+  dx=$((dx == 0 ? 1 : dx))
+  dy=$((dy == 0 ? 1 : dy))
+
+  case "$direction" in
+    bigger)
+      yabai -m window --resize "bottom_right:${dx}:${dy}"
+      yabai -m window --resize "top_left:-${dx}:-${dy}"
+      ;;
+    smaller)
+      yabai -m window --resize "bottom_right:-${dx}:-${dy}"
+      yabai -m window --resize "top_left:${dx}:${dy}"
+      ;;
+  esac
+else
+  # For tiled windows: use edge-based resize
+  delta=20
+  case "$direction" in
+    smaller)
+      yabai -m window --resize right:-${delta}:0 2>/dev/null || yabai -m window --resize left:${delta}:0 2>/dev/null
+      ;;
+    bigger)
+      yabai -m window --resize right:${delta}:0 2>/dev/null || yabai -m window --resize left:-${delta}:0 2>/dev/null
+      ;;
+    *) echo "unknown direction: $direction"; exit 1 ;;
+  esac
+fi
