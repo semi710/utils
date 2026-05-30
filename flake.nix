@@ -156,9 +156,10 @@
                 jq
                 bc
               ]) (builtins.readFile ./src/yabai/resize);
-              yabai-resize-dir = mkShellApplication "resize-dir" (with pkgs; [ jq ]) (
-                builtins.readFile ./src/yabai/resize-dir
-              );
+              yabai-resize-dir = mkShellApplication "resize-dir" (with pkgs; [
+                jq
+                bc
+              ]) (builtins.readFile ./src/yabai/resize-dir);
 
               walogram = pkgs.callPackage ./src/walogram { };
               walogram-test = (pkgs.callPackage ./src/walogram { }).override {
