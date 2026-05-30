@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Directional resize for yabai windows (h/j/k/l)
+# For tiled: determines window position and resizes the correct edge
+# For floating: uses absolute anchor points
+
+direction="$1"
+delta=20
+
+window=$(yabai -m query --windows --window)
+is_floating=$(echo "$window" | jq -r '.["is-floating"]')
+
+if [ "$is_floating" = "true" ]; then
+  # Floating: resize using absolute anchors
+  case "$direction" in
+    h) yabai -m window --resize "top_left:-${delta}:0" ;;
+    l) yabai -m window --resize "bottom_right:${delta}:0" ;;
+    j) yabai -m window --resize "bottom_right:0:${delta}" ;;
+    k) yabai -m window --resize "top_left:0:-${delta}" ;;
+    *) echo "unknown direction: $direction (use: h|j|k|l)"; exit 1 ;;
+  esac
+else
+  # Tiled: determine position relative to display center and resize correct edge
+  win_x=$(echo "$window" | jq -r '.frame.x')
+  win_y=$(echo "$window" | jq -r '.frame.y')
+
+  display=$(yabai -m query --displays --display)
+  disp_w=$(echo "$display" | jq -r '.frame.w')
+  disp_h=$(echo "$display" | jq -r '.frame.h')
+
+  center_x=$((disp_w / 2))
+  center_y=$((disp_h / 2))
+
+  case "$direction" in
+    h)
+      if [ "$win_x" -lt "$center_x" ]; then
+        yabai -m window --resize "right:-${delta}:0"
+      else
+        yabai -m window --resize "left:${delta}:0"
+      fi
+      ;;
+    l)
+      if [ "$win_x" -lt "$center_x" ]; then
+        yabai -m window --resize "right:${delta}:0"
+      else
+        yabai -m window --resize "left:-${delta}:0"
+      fi
+      ;;
+    j)
+      if [ "$win_y" -lt "$center_y" ]; then
+        yabai -m window --resize "bottom:0:${delta}"
+      else
+        yabai -m window --resize "top:0:-${delta}"
+      fi
+      ;;
+    k)
+      if [ "$win_y" -lt "$center_y" ]; then
+        yabai -m window --resize "bottom:0:-${delta}"
+      else
+        yabai -m window --resize "top:0:${delta}"
+      fi
+      ;;
+    *) echo "unknown direction: $direction (use: h|j|k|l)"; exit 1 ;;
+  esac
+fi
