@@ -11,14 +11,53 @@ done
 
 app="$1"
 pgrep_name="${process:-$app}"
-front_app=$(osascript -e 'tell application "System Events" to name of first application process whose frontmost is true')
+
+# Determine if currently frontmost
+front_app=$(osascript -e 'tell application "System Events" to name of first application process whose frontmost is true' 2>/dev/null || echo "")
 
 if [[ "$front_app" == "$app" || "$front_app" == "$pgrep_name" ]]; then
   osascript -e "tell application \"$app\" to hide"
-else
-  if pgrep -f "$pgrep_name" >/dev/null 2>&1; then
-    osascript -e "tell application \"$app\" to activate"
-  else
-    open -a "$app" 2>/dev/null || command "$app" & disown
+  exit 0
+fi
+
+# Check if running (pgrep first, then yabai)
+is_running=false
+
+if pgrep -f "$pgrep_name" >/dev/null 2>&1 || pgrep -x "$app" >/dev/null 2>&1; then
+  is_running=true
+fi
+
+# Fallback: yabai window existence
+if [[ "$is_running" == "false" ]] && command -v yabai >/dev/null 2>&1; then
+  if yabai -m query --windows 2>/dev/null | grep -qi "\"app\":\"$app\""; then
+    is_running=true
   fi
+fi
+
+# Activate or launch
+if [[ "$is_running" == "true" ]]; then
+  # Primary: yabai window focus (most reliable for Nix apps)
+  if command -v yabai >/dev/null 2>&1; then
+    windows_json=$(yabai -m query --windows 2>/dev/null || echo "[]")
+    
+    if command -v jq >/dev/null 2>&1; then
+      # Use jq to find the most recently focused window for this app
+      wid=$(echo "$windows_json" | jq -r "[.[] | select(.app == \"$app\")] | sort_by(.last_focused) | reverse | first | .id // empty" 2>/dev/null || echo "")
+      if [[ -n "$wid" ]]; then
+        yabai -m window --focus "$wid" 2>/dev/null && exit 0
+      fi
+    fi
+  fi
+
+  # Secondary: osascript
+  osascript -e "tell application \"$app\" to activate" 2>/dev/null && exit 0
+  osascript -e "tell application \"System Events\" to set frontmost of first application process whose name is \"$app\" to true" 2>/dev/null && exit 0
+  osascript -e "tell application \"System Events\" to set frontmost of first application process whose name contains \"$app\" to true" 2>/dev/null && exit 0
+
+  # Last resort
+  open -a "$app" 2>/dev/null && exit 0
+  
+  echo "Failed to focus '$app'" >&2
+else
+  open -a "$app" 2>/dev/null || command "$app" & disown
 fi
