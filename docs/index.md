@@ -1,7 +1,7 @@
 # utils
 
 Personal utility scripts packaged as a [Nix flake](https://flake.parts/),
-extracted from [ndots](https://github.com/semi710/ndots) for reuse across
+extracted from [ndots](https://ndots.semi.sh) <a href="https://github.com/semi710/ndots" target="_blank">:fontawesome-brands-github:</a> for reuse across
 machines.
 
 > Originally, these lived inline as Nix `''` strings. Moving them to standalone
@@ -121,7 +121,7 @@ The flake builds for four systems:
 
 ## Real-world usage
 
-See [ndots](https://github.com/semi710/ndots) for a complete NixOS + nix-darwin
+See [ndots](https://ndots.semi.sh) <a href="https://github.com/semi710/ndots" target="_blank">:fontawesome-brands-github:</a> for a complete NixOS + nix-darwin
 configuration that consumes this flake - Hyprland keybindings, Yabai/skhd
 configs, Rofi menus, Waybar widgets, and Stylix + Walogram integration.
 
