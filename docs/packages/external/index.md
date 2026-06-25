@@ -49,7 +49,7 @@ nix run github:semi710/utils#bstat
 
 The flake also pulls in
 [`firecat53/networkmanager-dmenu`](https://github.com/firecat53/networkmanager-dmenu)
-as an input. This is **not** exposed as a standalone package — it's consumed
+as an input. This is **not** exposed as a standalone package - it's consumed
 internally by the [`menus`](../rofi-menus/index.md#network-network-manager)
 package's `network` script:
 

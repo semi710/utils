@@ -1,7 +1,7 @@
 # Aerospace helpers
 
 macOS [Aerospace](https://github.com/nikitabiryukov/tmux-aerospace) window
-manager helpers — fuzzy window switchers built on `choose-gui` and `fzf`.
+manager helpers - fuzzy window switchers built on `choose-gui` and `fzf`.
 
 ---
 
@@ -12,7 +12,7 @@ manager helpers — fuzzy window switchers built on `choose-gui` and `fzf`.
 | `aerospace-focus-choose` | `aero.focus.choose` | [choose-gui](https://github.com/chipsenkbeil/choose) |
 | `aerospace-focus-fzf` | `aero.focus.sh` | [fzf](https://github.com/junegunn/fzf) |
 
-Both are macOS-only — they call `aerospace` to list and focus windows.
+Both are macOS-only - they call `aerospace` to list and focus windows.
 
 ---
 
@@ -143,7 +143,7 @@ esac
 ## `aero.grab.choose`
 
 A third script bundled in the same package (`aerospace-focus-choose`). Like
-`aero.focus.choose` but **grabs** the window — moves it to the current
+`aero.focus.choose` but **grabs** the window - moves it to the current
 workspace instead of just focusing.
 
 ```bash
@@ -156,8 +156,8 @@ aerospace move-node-to-workspace \
 ```
 
 !!! info "Grab vs focus"
-    - `aero.focus.choose` — switches focus to the window's current workspace.
-    - `aero.grab.choose` — pulls the window to *your* current workspace.
+    - `aero.focus.choose` - switches focus to the window's current workspace.
+    - `aero.grab.choose` - pulls the window to *your* current workspace.
 
 ---
 

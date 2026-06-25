@@ -7,4 +7,4 @@ Scripts originally lived as inline Nix `''` strings in ndots. Moved to standalon
 Most scripts are Hyprland-specific (waybar, rofi, hypr-clients). macOS utilities (aerospace, yabai) added later when darwin support was needed.
 
 ## Flake-based distribution
-Distributed as a flake input rather than a traditional package — users add `inputs.utils.url = "github:semi710/utils"` and reference `inputs.utils.packages.${pkgs.system}.<name>`.
+Distributed as a flake input rather than a traditional package - users add `inputs.utils.url = "github:semi710/utils"` and reference `inputs.utils.packages.${pkgs.system}.<name>`.

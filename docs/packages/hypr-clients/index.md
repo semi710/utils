@@ -16,17 +16,17 @@ The `clients` package bundles five scripts plus two rasi theme files:
 src/hypr/clients/
 ├── default.nix
 ├── bin/
-│   ├── focus-clients     # rofi custom mode — emits client list, focuses selection
-│   ├── get-client        # rofi dmenu — pull a client to current workspace
-│   ├── list-clients      # jq filter — prints "class - pid - title" lines
+│   ├── focus-clients     # rofi custom mode - emits client list, focuses selection
+│   ├── get-client        # rofi dmenu - pull a client to current workspace
+│   ├── list-clients      # jq filter - prints "class - pid - title" lines
 │   ├── run-focus         # rofi combi launcher (clients + drun)
-│   └── scratchpad-get    # rofi dmenu — pick from scratchpad
+│   └── scratchpad-get    # rofi dmenu - pick from scratchpad
 └── share/
     ├── conf.rasi         # shared rofi config (keybinds, font, layout)
     └── clients.rasi      # window/listview/element theme
 ```
 
-## `run-focus` — main entry point
+## `run-focus` - main entry point
 
 Launches a Rofi **combi** menu combining the custom `clients` mode (live window
 list) with the standard `drun` mode (application launcher). Selecting a
@@ -60,7 +60,7 @@ out=$(eval "$ROFI_CMD")
     this invocation just kills it and exits (toggle behavior). The script only
     proceeds when no rofi is running.
 
-## `focus-clients` — custom rofi mode
+## `focus-clients` - custom rofi mode
 
 Implements a [rofi custom mode](https://github.com/davatorium/rofi/blob/next/doc/rofi-dmenu.5.markdown)
 that emits the client list and handles selection. Receives the selected line
@@ -77,7 +77,7 @@ out=$(echo "$1" | awk '{print $3}')
 }
 ```
 
-## `get-client` — pull a window
+## `get-client` - pull a window
 
 A standalone dmenu that lists clients and **pulls** the selected one to the
 current workspace (also removes it from any group and raises it).
@@ -96,7 +96,7 @@ out=$(
 }
 ```
 
-## `list-clients` — the jq filter
+## `list-clients` - the jq filter
 
 The core data source. Queries all Hyprland clients, keeps only **mapped**
 windows, excludes special workspaces (except `special:comms`), and prints
@@ -113,7 +113,7 @@ hyprctl clients -j | jq -r '.[]
     Windows on special workspaces (e.g. `special:scratchpad`) are hidden from
     the list, except `special:comms` which is deliberately included.
 
-## `scratchpad-get` — scratchpad picker
+## `scratchpad-get` - scratchpad picker
 
 Delegates to an external `scratchpad` binary (expected in PATH), passing the
 rofi dmenu config and the `-g` (get) flag:
@@ -129,7 +129,7 @@ scratchpad -m "$ROFI_CMD" "$@" -g
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `rofi-theme-str` | `""` | Rasi fragment injected as `ROFI_THEME_STR` env var |
-| `uwsm` | `false` | Currently unused — would wrap rofi to launch via `uwsm app --` |
+| `uwsm` | `false` | Currently unused - would wrap rofi to launch via `uwsm app --` |
 
 ```nix
 inputs.utils.packages.${pkgs.system}.clients.override {
@@ -161,13 +161,13 @@ inputs.utils.packages.${pkgs.system}.clients.override {
 
 ## Theme files
 
-### `conf.rasi` — shared config
+### `conf.rasi` - shared config
 
 Sets the keybinds (`Ctrl+h/j/k/l` for navigation, `Return` to accept, mouse
 click to select), font (`JetBrainsMono Nerd Font 12`), and imports
 `clients.rasi` as the theme.
 
-### `clients.rasi` — window theme
+### `clients.rasi` - window theme
 
 A right-anchored panel (450px wide, full height) with a reversed listview
 (latest at bottom), 6 visible lines, icon size 32px, and a dark palette:
@@ -188,7 +188,7 @@ A right-anchored panel (450px wide, full height) with a reversed listview
 ## Usage
 
 ```bash
-# Direct — launch the combi menu
+# Direct - launch the combi menu
 nix run github:semi710/utils#clients
 
 # Or bind individual scripts

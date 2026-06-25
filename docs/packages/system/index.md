@@ -261,7 +261,7 @@ wl-paste | swappy -f - &>/dev/null ||
 ### Workflow
 
 1. Screenshot to clipboard (e.g. via `grimblast` / `hyprpicker`).
-2. Run `img-annotate` — Swappy opens with the clipboard image.
+2. Run `img-annotate` - Swappy opens with the clipboard image.
 3. Annotate, save, and the result goes back to the clipboard.
 
 | | |

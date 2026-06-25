@@ -1,7 +1,7 @@
 # Yabai helpers
 
 macOS [Yabai](https://github.com/koekeishiya/yabai) tiling window manager
-helpers — directional focus/move with cross-display fallback, display cycling,
+helpers - directional focus/move with cross-display fallback, display cycling,
 fuzzy window pickers, cursor warping, app toggling, and directional resize.
 
 All scripts use `set -euo pipefail` and parse Yabai's JSON output with `jq`.
@@ -81,7 +81,7 @@ esac
 | **Runtime deps** | `yabai`, `jq` |
 
 !!! note "Pure helper"
-    This script only prints an index — it doesn't focus anything. It's used
+    This script only prints an index - it doesn't focus anything. It's used
     as a `runtimeInput` by `cycle-display` and `cycle-move-display`.
 
 ---
@@ -154,7 +154,7 @@ fi
 ### BSP layout (directional with angle constraint)
 
 For tiled (BSP) layouts, it finds the **closest visible window** in the
-requested direction using a 45° cone constraint — the squared distance in the
+requested direction using a 45° cone constraint - the squared distance in the
 primary axis must exceed the squared distance in the secondary axis, so a
 window that's mostly east/west won't be picked when pressing north/south:
 
@@ -217,7 +217,7 @@ fi
 
 A fuzzy window picker using [choose-gui](https://github.com/chipsenkbeil/choose).
 Lists all windows (excluding `-wrapped` apps), lets you pick one, and focuses
-it — or launches the app if no window is found.
+it - or launches the app if no window is found.
 
 ```bash
 choice=$(yabai -m query --windows \
@@ -382,7 +382,7 @@ esac
 
 Directional resize using vim keys (`h/j/k/l`). For tiled windows, it **probes
 with 1px** to detect which edge is the split boundary, then applies the full
-delta — inverting direction for right/bottom windows.
+delta - inverting direction for right/bottom windows.
 
 ### Floating
 
@@ -415,11 +415,11 @@ before=$(echo "$window" | jq -r '.frame.w' | cut -d. -f1)
 yabai -m window --resize "right:-1:0" 2>/dev/null || true
 after=$(yabai -m query --windows --window | jq -r '.frame.w' | cut -d. -f1)
 if [ "$after" -lt "$before" ]; then
-  # Left window — right edge is boundary, shrink works
+  # Left window - right edge is boundary, shrink works
   remaining=$((delta - (before - after)))
   [ "$remaining" -gt 0 ] && yabai -m window --resize "right:-${remaining}:0"
 else
-  # Right window — left edge is boundary, moving left = GROW
+  # Right window - left edge is boundary, moving left = GROW
   yabai -m window --resize "left:-${delta}:0"
 fi
 ```

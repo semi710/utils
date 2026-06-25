@@ -1,7 +1,7 @@
-# Rofi — power menu
+# Rofi - power menu
 
 A themed Rofi power menu: **lock**, **suspend**, **logout**, **reboot**,
-**shutdown** — with uptime display and quick-select keys.
+**shutdown** - with uptime display and quick-select keys.
 
 Package: `powermenu-rofi` (binary: `rofi-powermenu`)
 
@@ -19,7 +19,7 @@ src/rofi/powermenu/
     └── powermenu.rasi    # fullscreen centered theme with feather icons
 ```
 
-## `menu` — the power menu
+## `menu` - the power menu
 
 Lists five actions as Nerd Font icons, shows uptime + hostname as a message,
 and dispatches the selected action:
@@ -77,7 +77,7 @@ Passing `-l` skips the menu and logs out immediately:
 ```
 
 !!! warning "Logout is aggressive"
-    The `logout_fn` runs `uwsm stop` then `sudo pkill -9 -u $(whoami)` — this
+    The `logout_fn` runs `uwsm stop` then `sudo pkill -9 -u $(whoami)` - this
     kills all your user processes. It requires passwordless `sudo` for
     `pkill` to work non-interactively.
 
@@ -90,7 +90,7 @@ Passing `-l` skips the menu and logs out immediately:
 Same keybind layout as other rofi packages (`Ctrl+h/j/k/l`, mouse click,
 `Return`), plus the five quick-select keys above. Imports `powermenu.rasi`.
 
-### `powermenu.rasi` — centered fullscreen
+### `powermenu.rasi` - centered fullscreen
 
 A fullscreen, transparent overlay (`black / 5%`) centered on screen. The
 listview is a single row of 5 circular elements (`border-radius: 100%`) using

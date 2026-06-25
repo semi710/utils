@@ -1,4 +1,4 @@
-# Rofi — full menu
+# Rofi - full menu
 
 A fullscreen Rofi application launcher (`drun` mode) with a pre-themed grid
 layout. Designed to be the primary app launcher in a Hyprland setup.
@@ -19,7 +19,7 @@ src/rofi/fullmenu/
     └── full.rasi      # fullscreen grid theme (8 columns × 4 rows)
 ```
 
-## `menu` — the launcher
+## `menu` - the launcher
 
 ```bash
 #!/usr/bin/env bash
@@ -62,7 +62,7 @@ drun-display-format:        "{name}";
 Quick-select keys are enabled: `l` (1st), `s` (2nd), `e` (3rd), `r` (4th),
 `S` (5th).
 
-### `full.rasi` — grid layout
+### `full.rasi` - grid layout
 
 A centered, fullscreen window (1366×768) with a translucent black background
 (`black / 10%`). The listview is an **8-column × 4-row grid** with vertical
@@ -70,7 +70,7 @@ orientation, 72px icons, and rounded 15px element corners. The input bar is
 centered with a 10px rounded border.
 
 !!! tip "Theme injection"
-    The first line of `full.rasi` is `{{full-theme-str}}` — a placeholder
+    The first line of `full.rasi` is `{{full-theme-str}}` - a placeholder
     replaced at build time with the `full-theme-str` argument. This is where
     color variables (`@selected`, `@foreground`, etc.) are injected, typically
     from Stylix.

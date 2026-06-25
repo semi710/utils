@@ -1,6 +1,6 @@
 # Usage
 
-How to consume the `utils` flake — as a flake input in your config, or ad-hoc
+How to consume the `utils` flake - as a flake input in your config, or ad-hoc
 via `nix run`.
 
 ---

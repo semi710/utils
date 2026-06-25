@@ -117,10 +117,10 @@ wl-screenrec \
 
 | Event | Notification |
 |-------|-------------|
-| Started | "Screen Recording Started" — "Recording to `<file>`" |
-| Stopped | "Screen Recording Stopped" — "Recording Stopped" |
-| Cancelled (no area) | "Screen Recording Cancelled" — "No Area Is Selected" |
-| Failed | "Screen Recording Failed" — "Failed to start recording" |
+| Started | "Screen Recording Started" - "Recording to `<file>`" |
+| Stopped | "Screen Recording Stopped" - "Recording Stopped" |
+| Cancelled (no area) | "Screen Recording Cancelled" - "No Area Is Selected" |
+| Failed | "Screen Recording Failed" - "Failed to start recording" |
 
 | | |
 |---|---|
@@ -144,7 +144,7 @@ wl-screenrec \
 ```
 
 !!! note "Audio device"
-    The recorder captures the **monitor** of the default audio sink — i.e. what
+    The recorder captures the **monitor** of the default audio sink - i.e. what
     you hear is what gets recorded. This is derived dynamically via
     `wpctl inspect @DEFAULT_AUDIO_SINK@`.
 
@@ -152,7 +152,7 @@ wl-screenrec \
 
 ## Build overrides
 
-None — `waybar-utils` has no override arguments.
+None - `waybar-utils` has no override arguments.
 
 ## Usage
 

@@ -8,11 +8,11 @@ examples.
 
 ## How packages are built
 
-The flake uses two patterns — see [Architecture](../architecture.md#two-packaging-patterns)
+The flake uses two patterns - see [Architecture](../architecture.md#two-packaging-patterns)
 for details:
 
-1. **`writeShellApplication`** — standalone scripts, read with `builtins.readFile`.
-2. **`stdenv.mkDerivation`** — multi-file packages with bundled `share/` data.
+1. **`writeShellApplication`** - standalone scripts, read with `builtins.readFile`.
+2. **`stdenv.mkDerivation`** - multi-file packages with bundled `share/` data.
 
 ## Categories
 
@@ -21,9 +21,9 @@ for details:
 | [Aerospace helpers](aerospace/index.md) | macOS | `aerospace-focus-choose`, `aerospace-focus-fzf` |
 | [Hyprland clients](hypr-clients/index.md) | Linux | `clients` |
 | [Hyprland scripts](hypr-scripts/index.md) | Linux | `fast`, `focus`, `move`, `fullscreen`, `zoom`, `toggle-group`, `lid-down`, `quick-term`, `monitor` |
-| [Rofi — full menu](rofi-fullmenu/index.md) | Linux | `fullmenu` |
-| [Rofi — menus](rofi-menus/index.md) | Linux | `menus` |
-| [Rofi — power menu](rofi-powermenu/index.md) | Linux | `powermenu-rofi` |
+| [Rofi - full menu](rofi-fullmenu/index.md) | Linux | `fullmenu` |
+| [Rofi - menus](rofi-menus/index.md) | Linux | `menus` |
+| [Rofi - power menu](rofi-powermenu/index.md) | Linux | `powermenu-rofi` |
 | [Walogram](walogram/index.md) | Universal | `walogram`, `walogram-test` |
 | [Waybar utils](waybar/index.md) | Linux | `waybar-utils` |
 | [System controls](system/index.md) | Linux | `volume`, `brightness`, `icpu`, `cat`, `myip`, `img-annotate` |

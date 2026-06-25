@@ -9,7 +9,7 @@ conventions used throughout.
 
 ```
 utils/
-├── flake.nix            # flake-parts definition — all outputs
+├── flake.nix            # flake-parts definition - all outputs
 ├── flake.lock           # pinned inputs
 ├── README.md
 ├── .envrc               # use flake (direnv)
@@ -86,7 +86,7 @@ The flake uses **two** ways to turn a shell script into a Nix package. The
 choice depends on whether the script needs bundled data files (rasi themes,
 config) or is a standalone script.
 
-### Pattern 1 — `writeShellApplication` (inline scripts)
+### Pattern 1 - `writeShellApplication` (inline scripts)
 
 Used for standalone scripts with no bundled data. The script source is read
 with `builtins.readFile` and wrapped with `pkgs.writeShellApplication`, which
@@ -113,7 +113,7 @@ in
     The `mkShellApplication` helper is a thin curried wrapper that keeps the
     `packages` attrset readable.
 
-### Pattern 2 — `stdenv.mkDerivation` (bundled packages)
+### Pattern 2 - `stdenv.mkDerivation` (bundled packages)
 
 Used when a package needs multiple scripts **and** data files (rasi themes,
 ini configs). Each sub-package has its own `default.nix` that:
@@ -154,7 +154,7 @@ with Stylix colors) override themes without patching the package source.
 | `clients` | `rofi-theme-str` | `ROFI_THEME_STR` env var in wrapper |
 | `fullmenu` | `full-theme-str` | `substituteInPlace` into `full.rasi` |
 | `menus` | `audio-theme-str`, `network-theme-str`, `bt-theme-str` | env var + `substituteInPlace` |
-| `powermenu-rofi` | — | fixed theme, no override |
+| `powermenu-rofi` | - | fixed theme, no override |
 | `walogram` | `image`, `colors` | `substituteInPlace` into `walogram` script |
 
 ---

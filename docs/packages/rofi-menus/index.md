@@ -1,4 +1,4 @@
-# Rofi — menus
+# Rofi - menus
 
 A bundle of Rofi-based utility menus: **audio sink/source switcher**,
 **bluetooth**, **network manager**, and **emoji picker**.
@@ -28,7 +28,7 @@ src/rofi/menus/
 
 ---
 
-## `audio-sink` — switch output device
+## `audio-sink` - switch output device
 
 Lists all PipeWire audio sinks (output devices), excludes loopbacks and
 Easy Effects sinks, marks the current default with 🔊, and lets you pick a
@@ -63,9 +63,9 @@ name. If only one device exists, it notifies "Single Audio Device" and exits.
 
 ---
 
-## `audio-source` — switch input device
+## `audio-source` - switch input device
 
-Identical to `audio-sink` but for **sources** (input devices — microphones).
+Identical to `audio-sink` but for **sources** (input devices - microphones).
 Includes `Audio/Source` and `Audio/Source/Virtual` classes, marks the current
 default with 🎤.
 
@@ -85,7 +85,7 @@ getSources() {
 
 ---
 
-## `bluetooth` — bluetooth device picker
+## `bluetooth` - bluetooth device picker
 
 A thin wrapper around [`rofi-bluetooth`](https://github.com/nickclyde/rofi-bluetooth):
 
@@ -101,7 +101,7 @@ rofi-bluetooth -i -config "$SRC_DIR/share/bt.rasi"
 
 ---
 
-## `network` — network manager
+## `network` - network manager
 
 A thin wrapper around [`networkmanager-dmenu`](https://github.com/firecat53/networkmanager-dmenu)
 (provided via the flake's `networkmanager` input):
@@ -136,7 +136,7 @@ terminal = foot
 
 ---
 
-## `rofimoji` — emoji picker
+## `rofimoji` - emoji picker
 
 A wrapper around [`rofimoji`](https://github.com/Nurry1/rofimoji) configured
 for Wayland:

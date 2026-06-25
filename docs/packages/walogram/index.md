@@ -66,7 +66,7 @@ variables.
 ### 3. Theme assembly
 
 The generated color variables are concatenated with `share/colors.wal-constants`
-— a ~400-line mapping file that assigns every Telegram theme key to a base
+- a ~400-line mapping file that assigns every Telegram theme key to a base
 color or variant:
 
 ```
@@ -177,11 +177,11 @@ in
 ```
 
 !!! tip "Materialgram"
-    The README recommends `materialgram` (a Telegram fork) — the generated
+    The README recommends `materialgram` (a Telegram fork) - the generated
     theme works with both standard Telegram Desktop and Materialgram.
 
 !!! note "Brightness variants"
     The `colors.wal-constants` file uses many `colorDarkerN_XX` and
     `colorLighterN_XX` variants (e.g. `colorDarker7_70` for message
     backgrounds, `colorLighter7_40` for active text). These are all computed
-    at runtime by `gencolors` — you only need to provide the 16 base colors.
+    at runtime by `gencolors` - you only need to provide the 16 base colors.

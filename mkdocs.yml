@@ -1,6 +1,6 @@
 site_name: utils
 site_url: https://utils.semi.sh
-site_description: Personal utility scripts packaged as a Nix flake — Hyprland, Yabai, Aerospace, Rofi, and more.
+site_description: Personal utility scripts packaged as a Nix flake - Hyprland, Yabai, Aerospace, Rofi, and more.
 site_author: Nikhil Singh
 repo_name: semi710/utils
 repo_url: https://github.com/semi710/utils
@@ -42,9 +42,9 @@ nav:
       - Aerospace helpers: packages/aerospace/index.md
       - Hyprland clients: packages/hypr-clients/index.md
       - Hyprland scripts: packages/hypr-scripts/index.md
-      - Rofi — full menu: packages/rofi-fullmenu/index.md
-      - Rofi — menus: packages/rofi-menus/index.md
-      - Rofi — power menu: packages/rofi-powermenu/index.md
+      - Rofi - full menu: packages/rofi-fullmenu/index.md
+      - Rofi - menus: packages/rofi-menus/index.md
+      - Rofi - power menu: packages/rofi-powermenu/index.md
       - Walogram: packages/walogram/index.md
       - Waybar utils: packages/waybar/index.md
       - System controls: packages/system/index.md

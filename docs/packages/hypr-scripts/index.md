@@ -108,7 +108,7 @@ fi
 | | |
 |---|---|
 | **Arguments** | `l` \| `r` \| `u` \| `d` |
-| **Env vars** | `HYPR_MOVE_VAL` (default `50`) — pixel step for floating moves |
+| **Env vars** | `HYPR_MOVE_VAL` (default `50`) - pixel step for floating moves |
 | **Runtime deps** | `jq`, `hyprctl` |
 | **Package** | `move` |
 
@@ -144,7 +144,7 @@ hyprctl dispatch fullscreen "$result"
 
 ## `zoom`
 
-Cursor zoom control — increment, decrement, or reset the
+Cursor zoom control - increment, decrement, or reset the
 `cursor:zoom_factor`.
 
 ```bash
@@ -316,7 +316,7 @@ hyprctl dispatch focusmonitor "$primary"
 | **Package** | `monitor` |
 
 !!! warning "Two-monitor only"
-    The script has a TODO for multi-monitor support — currently hard-coded to
+    The script has a TODO for multi-monitor support - currently hard-coded to
     exactly 2 monitors (id 0 = secondary, id 1 = primary). With 3+ monitors
     only two will be configured.
 

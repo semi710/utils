@@ -38,14 +38,14 @@ The flake builds for four systems:
     Scripts that call Linux-only tools (Hyprland, WirePlumber, brightnessctl,
     etc.) will only be useful on Linux. macOS-only scripts (Yabai, Aerospace,
     Hammerspoon) only make sense on Darwin. The packages still build on every
-    system — they just won't do anything useful at runtime if the underlying
+    system - they just won't do anything useful at runtime if the underlying
     tool is missing.
 
 ---
 
 ## Package overview
 
-### Hyprland — Linux
+### Hyprland - Linux
 
 | Package | Script | Description |
 |---------|--------|-------------|
@@ -58,9 +58,9 @@ The flake builds for four systems:
 | `lid-down` | [`lid-down`](https://github.com/semi710/utils/tree/main/src/hypr/lid-down) | Handle laptop lid close |
 | `quick-term` | [`quick-term`](https://github.com/semi710/utils/tree/main/src/hypr/quick-term) | Drop-down terminal (Yakuake-style) |
 | `monitor` | [`monitor`](https://github.com/semi710/utils/tree/main/src/hypr/monitor) | Auto-assign workspaces to monitors |
-| `clients` | [`clients`](https://github.com/semi710/utils/tree/main/src/hypr/clients) | Rofi window list — focus or pull |
+| `clients` | [`clients`](https://github.com/semi710/utils/tree/main/src/hypr/clients) | Rofi window list - focus or pull |
 
-### Yabai — macOS
+### Yabai - macOS
 
 | Package | Script | Description |
 |---------|--------|-------------|
@@ -77,14 +77,14 @@ The flake builds for four systems:
 | `yabai-resize` | `resize` | Grow/shrink window (floating & tiled) |
 | `yabai-resize-dir` | `resize-dir` | Directional resize (h/j/k/l) |
 
-### Aerospace — macOS
+### Aerospace - macOS
 
 | Package | Script | Description |
 |---------|--------|-------------|
 | `aerospace-focus-choose` | `aero.focus.choose` | choose-gui window switcher |
 | `aerospace-focus-fzf` | `aero.focus.sh` | fzf window switcher |
 
-### Rofi menus — Linux
+### Rofi menus - Linux
 
 | Package | Script | Description |
 |---------|--------|-------------|
@@ -92,7 +92,7 @@ The flake builds for four systems:
 | `menus` | `audio-sink`, `audio-source`, `bluetooth`, `network`, `rofimoji` | Audio devices, bluetooth, network, emoji picker |
 | `fullmenu` | `menu` | Fullscreen application launcher |
 
-### System controls — Linux
+### System controls - Linux
 
 | Package | Script | Description |
 |---------|--------|-------------|
@@ -100,7 +100,7 @@ The flake builds for four systems:
 | `brightness` | `brightness` | Screen brightness up / down |
 | `icpu` | `icpu` | CPU info (freq / temp / usage / turbo / governor) |
 
-### Theming & misc — Universal
+### Theming & misc - Universal
 
 | Package | Script | Description |
 |---------|--------|-------------|
@@ -114,15 +114,15 @@ The flake builds for four systems:
 
 | Package | Source |
 |---------|--------|
-| `center-align` | [`niksingh710/center-align`](https://github.com/niksingh710/center-align) — terminal output centering |
-| `bstat` | [`niksingh710/basic-battery-stat`](https://github.com/niksingh710/basic-battery-stat) — battery status with KDE Connect support |
+| `center-align` | [`niksingh710/center-align`](https://github.com/niksingh710/center-align) - terminal output centering |
+| `bstat` | [`niksingh710/basic-battery-stat`](https://github.com/niksingh710/basic-battery-stat) - battery status with KDE Connect support |
 
 ---
 
 ## Real-world usage
 
 See [ndots](https://github.com/semi710/ndots) for a complete NixOS + nix-darwin
-configuration that consumes this flake — Hyprland keybindings, Yabai/skhd
+configuration that consumes this flake - Hyprland keybindings, Yabai/skhd
 configs, Rofi menus, Waybar widgets, and Stylix + Walogram integration.
 
 !!! example
