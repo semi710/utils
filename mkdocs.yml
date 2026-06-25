@@ -1,0 +1,93 @@
+site_name: utils
+site_url: https://utils.semi.sh
+site_description: Personal utility scripts packaged as a Nix flake — Hyprland, Yabai, Aerospace, Rofi, and more.
+site_author: Nikhil Singh
+repo_name: semi710/utils
+repo_url: https://github.com/semi710/utils
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+
+theme:
+  name: material
+  font:
+    text: Sora
+    code: JetBrains Mono
+  icon:
+    logo: material/package-variant
+    repo: fontawesome/brands/github
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: deep orange
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - Architecture: architecture.md
+  - Packages:
+      - Overview: packages/index.md
+      - Aerospace helpers: packages/aerospace/index.md
+      - Hyprland clients: packages/hypr-clients/index.md
+      - Hyprland scripts: packages/hypr-scripts/index.md
+      - Rofi — full menu: packages/rofi-fullmenu/index.md
+      - Rofi — menus: packages/rofi-menus/index.md
+      - Rofi — power menu: packages/rofi-powermenu/index.md
+      - Walogram: packages/walogram/index.md
+      - Waybar utils: packages/waybar/index.md
+      - System controls: packages/system/index.md
+      - Yabai helpers: packages/yabai/index.md
+      - External packages: packages/external/index.md
+  - Memory:
+      - Context: memory/context.md
+      - Decisions: memory/decisions.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/semi710/utils
+    - icon: fontawesome/brands/github
+      link: https://github.com/semi710/ndots
+  generator: false
+
+copyright: "Made with <span style=\"color: #ff6e40\">&hearts;</span> by Nikhil · <a href=\"https://semi.sh\">semi.sh</a>"

@@ -44,6 +44,7 @@
         {
           devShells.default = config.pre-commit.devShell.overrideAttrs (oa: {
             name = "utils";
+            buildInputs = (oa.buildInputs or [ ]) ++ [ pkgs.just ];
           });
 
           pre-commit.settings.hooks.nixfmt-rfc-style.enable = true;
