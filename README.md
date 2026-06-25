@@ -6,11 +6,10 @@ Hyprland, Yabai, Aerospace, Rofi, Waybar, and more. Extracted from
 
 ---
 
-<h3>📚 <a href="https://utils.semi.sh">utils.semi.sh</a> - Full Documentation</h3>
-
-<sub>Packages · Usage · Architecture · Integration Examples · Development</sub>
-
 ![GitHub stars](https://img.shields.io/github/stars/semi710/utils) ![GitHub forks](https://img.shields.io/github/forks/semi710/utils) ![GitHub last commit](https://img.shields.io/github/last-commit/semi710/utils)
+
+<h3>📚 <a href="https://utils.semi.sh">utils.semi.sh</a> - Full Documentation</h3>
+<sub>Packages · Usage · Architecture · Integration Examples · Development</sub>
 
 ---
 
