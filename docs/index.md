@@ -157,3 +157,11 @@ nix run github:semi710/utils#walogram
 
 See [Usage](usage.md) for full integration examples, and
 [Architecture](architecture.md) for how the flake is structured.
+
+## Docs
+
+Docs are served at [utils.semi.sh](https://utils.semi.sh). To preview locally:
+
+```bash
+just doc
+```
