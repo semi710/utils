@@ -11,20 +11,18 @@ layout=$(yabai -m query --spaces --space | jq -r '.type')
 
 if [ "$layout" = "stack" ]; then
   case "$dir" in
-    east|south) yabai -m window --focus stack_next 2>/dev/null || yabai -m window --focus stack_first 2>/dev/null ;;
-    west|north) yabai -m window --focus stack_prev 2>/dev/null || yabai -m window --focus stack_last 2>/dev/null ;;
+    east|south) yabai -m window --focus stack.next 2>/dev/null || yabai -m window --focus stack.first 2>/dev/null ;;
+    west|north) yabai -m window --focus stack.prev 2>/dev/null || yabai -m window --focus stack.last 2>/dev/null ;;
   esac
   exit 0
 fi
 
-# Native directional focus for tiled windows in BSP
+# BSP: try native directional focus first (fast path for tiled->tiled)
 yabai -m window --focus "$dir" 2>/dev/null && exit 0
 
 # Fallback: coordinate-based focus for floating windows.
 # Native --focus only traverses the BSP tree, so it fails when the
 # focused window is floating or when the target is floating.
-# 45-degree cone: only pick windows where the dominant axis distance
-# exceeds the perpendicular axis distance.
 cur=$(yabai -m query --windows --window)
 cid=$(echo "$cur" | jq -r '.id')
 cx=$(echo "$cur" | jq '.frame.x + .frame.w/2')
