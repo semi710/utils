@@ -17,12 +17,9 @@ if [ "$layout" = "stack" ]; then
   exit 0
 fi
 
-# BSP: try native directional focus first (fast path for tiled->tiled)
-yabai -m window --focus "$dir" 2>/dev/null && exit 0
-
-# Fallback: coordinate-based focus for floating windows.
-# Native --focus only traverses the BSP tree, so it fails when the
-# focused window is floating or when the target is floating.
+# Coordinate-based focus: handles both tiled and floating windows.
+# 45-degree cone filter picks the closest visible window in the
+# requested direction, regardless of tiling state.
 cur=$(yabai -m query --windows --window)
 cid=$(echo "$cur" | jq -r '.id')
 cx=$(echo "$cur" | jq '.frame.x + .frame.w/2')
@@ -46,7 +43,11 @@ target=$(yabai -m query --windows --space | jq -r \
 if [ -n "$target" ]; then
   yabai -m window --focus "$target"
 else
-  case "$dir" in
-    east|west) yabai -m display --focus "$dir" 2>/dev/null ;;
-  esac
+  # No window in that direction on this space - try native (handles
+  # edge cases like wrapped BSP splits), then cross display.
+  yabai -m window --focus "$dir" 2>/dev/null || {
+    case "$dir" in
+      east|west) yabai -m display --focus "$dir" 2>/dev/null ;;
+    esac
+  }
 fi
