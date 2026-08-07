@@ -7,87 +7,18 @@ case "$dir" in
   prev) dir="west" ;;
 esac
 
-# Check if current space is in stack layout
 layout=$(yabai -m query --spaces --space | jq -r '.type')
 
 if [ "$layout" = "stack" ]; then
-  # Get all visible windows on current space, sorted by stack-index
-  windows=$(yabai -m query --windows --space | jq -r 'sort_by(."stack-index") | [.[] | select(."is-visible" == true)] | .[].id')
-
-  # Get current window
-  cur_id=$(yabai -m query --windows --window | jq -r '.id')
-
-  # Build array of window IDs and find current position
-  mapfile -t ids <<< "$windows"
-  cur_idx=-1
-  for i in "${!ids[@]}"; do
-    if [ "${ids[$i]}" = "$cur_id" ]; then
-      cur_idx=$i
-      break
-    fi
-  done
-
-  if [ "$cur_idx" -ge 0 ] && [ "${#ids[@]}" -gt 1 ]; then
-    case "$dir" in
-      east|south)
-        next_idx=$(( (cur_idx + 1) % ${#ids[@]} ))
-        yabai -m window --focus "${ids[$next_idx]}"
-        ;;
-      west|north)
-        prev_idx=$(( (cur_idx - 1 + ${#ids[@]}) % ${#ids[@]} ))
-        yabai -m window --focus "${ids[$prev_idx]}"
-        ;;
-    esac
-  fi
+  case "$dir" in
+    east|south) yabai -m window --focus stack_next 2>/dev/null || yabai -m window --focus stack_first 2>/dev/null ;;
+    west|north) yabai -m window --focus stack_prev 2>/dev/null || yabai -m window --focus stack_last 2>/dev/null ;;
+  esac
   exit 0
 fi
 
-# Get current window position
-cur_json=$(yabai -m query --windows --window)
-cur_id=$(echo "$cur_json" | jq -r '.id')
-cx=$(echo "$cur_json" | jq '.frame.x + .frame.w / 2')
-cy=$(echo "$cur_json" | jq '.frame.y + .frame.h / 2')
-
-# Find closest visible window in the requested direction
-# Uses actual screen coordinates + angle constraint (within 45° cone).
-# This prevents a window that's primarily east/west from being picked
-# when pressing north/south (and vice versa).
-target=$(yabai -m query --windows --space | jq -r \
-  --argjson cid "$cur_id" \
-  --argjson cx "$cx" \
-  --argjson cy "$cy" \
-  --arg dir "$dir" \
-  '[.[] | select(.id != $cid and .["is-visible"] == true)]
-   | map(select(
-       ($dir == "west"  and .frame.x + .frame.w/2 < $cx and
-        (($cx - (.frame.x + .frame.w/2)) * ($cx - (.frame.x + .frame.w/2))) >
-        (($cy - (.frame.y + .frame.h/2)) * ($cy - (.frame.y + .frame.h/2)))) or
-       ($dir == "east"  and .frame.x + .frame.w/2 > $cx and
-        ((.frame.x + .frame.w/2 - $cx) * (.frame.x + .frame.w/2 - $cx)) >
-        (($cy - (.frame.y + .frame.h/2)) * ($cy - (.frame.y + .frame.h/2)))) or
-       ($dir == "north" and .frame.y + .frame.h/2 < $cy and
-        (($cy - (.frame.y + .frame.h/2)) * ($cy - (.frame.y + .frame.h/2))) >
-        (($cx - (.frame.x + .frame.w/2)) * ($cx - (.frame.x + .frame.w/2)))) or
-       ($dir == "south" and .frame.y + .frame.h/2 > $cy and
-        ((.frame.y + .frame.h/2 - $cy) * (.frame.y + .frame.h/2 - $cy)) >
-        (($cx - (.frame.x + .frame.w/2)) * ($cx - (.frame.x + .frame.w/2))))
-     ))
-   | sort_by(
-       if $dir == "west" or $dir == "east" then
-         (($cx - (.frame.x + .frame.w/2)) * ($cx - (.frame.x + .frame.w/2))) * 4 +
-         (($cy - (.frame.y + .frame.h/2)) * ($cy - (.frame.y + .frame.h/2)))
-       else
-         (($cx - (.frame.x + .frame.w/2)) * ($cx - (.frame.x + .frame.w/2))) +
-         (($cy - (.frame.y + .frame.h/2)) * ($cy - (.frame.y + .frame.h/2))) * 4
-       end
-     )
-   | .[0].id // empty')
-
-if [ -n "$target" ]; then
-  yabai -m window --focus "$target"
-else
-  # Nothing in that direction on this space — try next display
+yabai -m window --focus "$dir" 2>/dev/null || {
   case "$dir" in
-    east|west) yabai -m display --focus "$dir" ;;
+    east|west) yabai -m display --focus "$dir" 2>/dev/null ;;
   esac
-fi
+}

@@ -1,107 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Directional resize for yabai windows (h/j/k/l)
-# h = move boundary left,  l = move boundary right
-# k = move boundary up,    j = move boundary down
-#
-# Tiled: probe with 1px to detect which edge is the split boundary,
-# then apply full delta. For left/top windows, the split is right/bottom.
-# For right/bottom windows, the split is left/top — and direction is inverted.
-# Floating: symmetric shrink/grow.
-
-direction="$1"
+dir="$1"
 delta=20
 
 window=$(yabai -m query --windows --window)
 is_floating=$(echo "$window" | jq -r '.["is-floating"]')
 
 if [ "$is_floating" = "true" ]; then
-  half=$((delta / 2))
-  case "$direction" in
-    h) yabai -m window --resize "top_left:${half}:0"; yabai -m window --resize "bottom_right:-${half}:0" ;;
-    l) yabai -m window --resize "top_left:-${half}:0"; yabai -m window --resize "bottom_right:${half}:0" ;;
-    k) yabai -m window --resize "top_left:0:${half}"; yabai -m window --resize "bottom_right:0:-${half}" ;;
-    j) yabai -m window --resize "top_left:0:-${half}"; yabai -m window --resize "bottom_right:0:${half}" ;;
-    *) echo "unknown direction: $direction (use: h|j|k|l)"; exit 1 ;;
+  h=$((delta / 2))
+  case "$dir" in
+    h) yabai -m window --resize "top_left:${h}:0" 2>/dev/null; yabai -m window --resize "bottom_right:-${h}:0" 2>/dev/null ;;
+    l) yabai -m window --resize "top_left:-${h}:0" 2>/dev/null; yabai -m window --resize "bottom_right:${h}:0" 2>/dev/null ;;
+    k) yabai -m window --resize "top_left:0:${h}" 2>/dev/null; yabai -m window --resize "bottom_right:0:-${h}" 2>/dev/null ;;
+    j) yabai -m window --resize "top_left:0:-${h}" 2>/dev/null; yabai -m window --resize "bottom_right:0:${h}" 2>/dev/null ;;
+    *) echo "usage: $0 h|j|k|l" >&2; exit 1 ;;
   esac
 else
-  # Tiled: probe with 1px on right/bottom edge.
-  # If it works, the split is on right/bottom (left/top window).
-  # If not, the split is on left/top (right/bottom window) — inverted direction.
-  case "$direction" in
-    h) # move boundary left
-      before=$(echo "$window" | jq -r '.frame.w' | cut -d. -f1)
-      yabai -m window --resize "right:-1:0" 2>/dev/null || true
-      after=$(yabai -m query --windows --window | jq -r '.frame.w' | cut -d. -f1)
-      if [ "$after" -lt "$before" ]; then
-        # Left window — right edge is boundary, shrink works
-        remaining=$((delta - (before - after)))
-        if [ "$remaining" -gt 0 ]; then
-          yabai -m window --resize "right:-${remaining}:0" 2>/dev/null || true
-        fi
-      else
-        # Right window — left edge is boundary, moving left = GROW
-        if [ "$after" -gt "$before" ]; then
-          yabai -m window --resize "right:1:0" 2>/dev/null || true
-        fi
-        yabai -m window --resize "left:-${delta}:0" 2>/dev/null || true
-      fi
-      ;;
-    l) # move boundary right
-      before=$(echo "$window" | jq -r '.frame.w' | cut -d. -f1)
-      yabai -m window --resize "right:1:0" 2>/dev/null || true
-      after=$(yabai -m query --windows --window | jq -r '.frame.w' | cut -d. -f1)
-      if [ "$after" -gt "$before" ]; then
-        # Left window — right edge is boundary, grow works
-        remaining=$((delta - (after - before)))
-        if [ "$remaining" -gt 0 ]; then
-          yabai -m window --resize "right:${remaining}:0" 2>/dev/null || true
-        fi
-      else
-        # Right window — left edge is boundary, moving right = SHRINK
-        if [ "$after" -lt "$before" ]; then
-          yabai -m window --resize "right:-1:0" 2>/dev/null || true
-        fi
-        yabai -m window --resize "left:${delta}:0" 2>/dev/null || true
-      fi
-      ;;
-    k) # move boundary up
-      before=$(echo "$window" | jq -r '.frame.h' | cut -d. -f1)
-      yabai -m window --resize "bottom:0:-1" 2>/dev/null || true
-      after=$(yabai -m query --windows --window | jq -r '.frame.h' | cut -d. -f1)
-      if [ "$after" -lt "$before" ]; then
-        # Top window — bottom edge is boundary, shrink works
-        remaining=$((delta - (before - after)))
-        if [ "$remaining" -gt 0 ]; then
-          yabai -m window --resize "bottom:0:-${remaining}" 2>/dev/null || true
-        fi
-      else
-        # Bottom window — top edge is boundary, moving up = GROW
-        if [ "$after" -gt "$before" ]; then
-          yabai -m window --resize "bottom:0:1" 2>/dev/null || true
-        fi
-        yabai -m window --resize "top:0:-${delta}" 2>/dev/null || true
-      fi
-      ;;
-    j) # move boundary down
-      before=$(echo "$window" | jq -r '.frame.h' | cut -d. -f1)
-      yabai -m window --resize "bottom:0:1" 2>/dev/null || true
-      after=$(yabai -m query --windows --window | jq -r '.frame.h' | cut -d. -f1)
-      if [ "$after" -gt "$before" ]; then
-        # Top window — bottom edge is boundary, grow works
-        remaining=$((delta - (after - before)))
-        if [ "$remaining" -gt 0 ]; then
-          yabai -m window --resize "bottom:0:${remaining}" 2>/dev/null || true
-        fi
-      else
-        # Bottom window — top edge is boundary, moving down = SHRINK
-        if [ "$after" -lt "$before" ]; then
-          yabai -m window --resize "bottom:0:-1" 2>/dev/null || true
-        fi
-        yabai -m window --resize "top:0:${delta}" 2>/dev/null || true
-      fi
-      ;;
-    *) echo "unknown direction: $direction (use: h|j|k|l)"; exit 1 ;;
+  case "$dir" in
+    h) yabai -m window --resize "right:-${delta}:0" 2>/dev/null || yabai -m window --resize "left:-${delta}:0" 2>/dev/null ;;
+    l) yabai -m window --resize "right:${delta}:0" 2>/dev/null || yabai -m window --resize "left:${delta}:0" 2>/dev/null ;;
+    k) yabai -m window --resize "bottom:0:-${delta}" 2>/dev/null || yabai -m window --resize "top:0:-${delta}" 2>/dev/null ;;
+    j) yabai -m window --resize "bottom:0:${delta}" 2>/dev/null || yabai -m window --resize "top:0:${delta}" 2>/dev/null ;;
+    *) echo "usage: $0 h|j|k|l" >&2; exit 1 ;;
   esac
 fi
