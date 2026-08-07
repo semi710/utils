@@ -39,7 +39,7 @@ target=$(yabai -m query --windows --space | jq -r \
         ($dir == "north" and $dy < 0 and $dy*$dy > $dx*$dx) or
         ($dir == "south" and $dy > 0 and $dy*$dy > $dx*$dx)
       )
-    | {id, dist: $dx*$dx + $dy*$dy}
+    | {id, dist: ($dx*$dx + $dy*$dy)}
   ]
   | sort_by(.dist) | .[0].id // empty')
 
