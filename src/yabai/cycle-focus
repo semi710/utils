@@ -17,8 +17,38 @@ if [ "$layout" = "stack" ]; then
   exit 0
 fi
 
-yabai -m window --focus "$dir" 2>/dev/null || {
+# Native directional focus for tiled windows in BSP
+yabai -m window --focus "$dir" 2>/dev/null && exit 0
+
+# Fallback: coordinate-based focus for floating windows.
+# Native --focus only traverses the BSP tree, so it fails when the
+# focused window is floating or when the target is floating.
+# 45-degree cone: only pick windows where the dominant axis distance
+# exceeds the perpendicular axis distance.
+cur=$(yabai -m query --windows --window)
+cid=$(echo "$cur" | jq -r '.id')
+cx=$(echo "$cur" | jq '.frame.x + .frame.w/2')
+cy=$(echo "$cur" | jq '.frame.y + .frame.h/2')
+
+target=$(yabai -m query --windows --space | jq -r \
+  --argjson cid "$cid" --argjson cx "$cx" --argjson cy "$cy" --arg dir "$dir" '
+  [.[] | select(.id != $cid and .["is-visible"] == true)
+    | (.frame.x + .frame.w/2 - $cx) as $dx
+    | (.frame.y + .frame.h/2 - $cy) as $dy
+    | select(
+        ($dir == "west"  and $dx < 0 and $dx*$dx > $dy*$dy) or
+        ($dir == "east"  and $dx > 0 and $dx*$dx > $dy*$dy) or
+        ($dir == "north" and $dy < 0 and $dy*$dy > $dx*$dx) or
+        ($dir == "south" and $dy > 0 and $dy*$dy > $dx*$dx)
+      )
+    | {id, dist: $dx*$dx + $dy*$dy}
+  ]
+  | sort_by(.dist) | .[0].id // empty')
+
+if [ -n "$target" ]; then
+  yabai -m window --focus "$target"
+else
   case "$dir" in
     east|west) yabai -m display --focus "$dir" 2>/dev/null ;;
   esac
-}
+fi
