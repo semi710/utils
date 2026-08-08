@@ -164,6 +164,9 @@
               yabai-warp-cursor = mkShellApplication "warp-cursor" (with pkgs; [ jq ]) (
                 builtins.readFile ./src/yabai/warp-cursor
               );
+              yabai-kbd-backlight = mkShellApplication "kbd-backlight" [ ] (
+                builtins.readFile ./src/yabai/kbd-backlight
+              );
               yabai-toggle-app = mkShellApplication "toggle-app" (with pkgs; [ ]) (
                 builtins.readFile ./src/yabai/toggle-app
               );
