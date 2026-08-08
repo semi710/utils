@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-dir="$1"
-osascript -e "tell application \"Hammerspoon\" to execute lua code \"local e=hs.eventtap.event e.newSystemKeyEvent('ILLUMINATION_$(echo "$dir" | tr '[:lower:]' '[:upper:]'),true):post() hs.timer.usleep(10000) e.newSystemKeyEvent('ILLUMINATION_$(echo "$dir" | tr '[:lower:]' '[:upper:]'),false):post()\"" 2>/dev/null || true
+case "$1" in
+  up)
+    osascript -e 'tell application "Hammerspoon" to execute lua code "hs.eventtap.event.newSystemKeyEvent(\"ILLUMINATION_UP\",true):post() hs.timer.usleep(10000) hs.eventtap.event.newSystemKeyEvent(\"ILLUMINATION_UP\",false):post()"' ;;
+  down)
+    osascript -e 'tell application "Hammerspoon" to execute lua code "hs.eventtap.event.newSystemKeyEvent(\"ILLUMINATION_DOWN\",true):post() hs.timer.usleep(10000) hs.eventtap.event.newSystemKeyEvent(\"ILLUMINATION_DOWN\",false):post()"' ;;
+  *) echo "usage: $0 up|down" >&2; exit 1 ;;
+esac
