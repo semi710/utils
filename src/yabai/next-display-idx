@@ -4,7 +4,7 @@ set -euo pipefail
 dir="${1:-next}"
 count=$(yabai -m query --displays | jq 'length')
 [ "$count" -eq 0 ] && exit 0
-cur_idx=$(yabai -m query --displays --display | jq -r '.index')
+cur_idx=$(yabai -m query --displays --display mouse | jq -r '.index')
 
 case "$dir" in
   next) echo $(( (cur_idx % count) + 1 )) ;;
