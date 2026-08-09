@@ -147,6 +147,10 @@
                 jq
                 next-display-idx
               ]) (builtins.readFile ./src/yabai/cycle-move-display);
+              yabai-space-move-display = mkShellApplication "space-move-display" (with pkgs; [
+                jq
+                next-display-idx
+              ]) (builtins.readFile ./src/yabai/space-move-display);
               yabai-cycle-focus = mkShellApplication "cycle-focus" (with pkgs; [ jq ]) (
                 builtins.readFile ./src/yabai/cycle-focus
               );

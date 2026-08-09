@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dir="${1:-next}"
+count=$(yabai -m query --displays | jq 'length')
+[ "$count" -le 1 ] && exit 0
+cur_idx=$(yabai -m query --displays --display | jq -r '.index')
+case "$dir" in
+  next) next_idx=$(( (cur_idx % count) + 1 )) ;;
+  prev) next_idx=$(( ( (cur_idx - 2 + count) % count ) + 1 )) ;;
+  *)    next_idx="$cur_idx" ;;
+esac
+yabai -m space --display "$next_idx"
+yabai -m display --focus "$next_idx"
