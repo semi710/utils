@@ -4,27 +4,30 @@ set -euo pipefail
 dir="$1"
 delta=20
 
-# Snapshot frame to detect if a resize actually took effect
-# (yabai returns 0 even when the app rejects the resize)
-before=$(yabai -m query --windows --window | jq -r '"\(.frame.w) \(.frame.h)"')
-w=${before% *}
-h=${before#* }
+window=$(yabai -m query --windows --window)
+is_floating=$(echo "$window" | jq -r '.["is-floating"]')
 
-# Proportional deltas to preserve aspect ratio
-hd=$((delta * h / w))
-wd=$((delta * w / h))
-
-# Try a resize; succeed only if the window actually changed
-try() {
-  yabai -m window --resize "$1" 2>/dev/null || true
-  after=$(yabai -m query --windows --window | jq -r '"\(.frame.w) \(.frame.h)"')
-  [ "$before" != "$after" ]
-}
-
-case "$dir" in
-  h) try "right:-${delta}:0" || try "left:${delta}:0" || try "bottom_right:-${delta}:-${hd}" ;;
-  l) try "right:${delta}:0" || try "left:-${delta}:0" || try "bottom_right:${delta}:${hd}" ;;
-  k) try "bottom:0:-${delta}" || try "top:0:${delta}" || try "bottom_right:-${wd}:-${delta}" ;;
-  j) try "bottom:0:${delta}" || try "top:0:-${delta}" || try "bottom_right:${wd}:${delta}" ;;
-  *) echo "usage: $0 h|j|k|l" >&2; exit 1 ;;
-esac
+if [ "$is_floating" = "true" ]; then
+  # Proportional diagonal resize from bottom_right (top-left anchored, no movement).
+  # Single-edge resize fails on aspect-ratio-locked apps (FaceTime, etc.) because
+  # changing one dimension gets rejected. Proportional diagonal preserves the ratio.
+  w=$(echo "$window" | jq -r '.frame.w')
+  h=$(echo "$window" | jq -r '.frame.h')
+  hd=$((delta * h / w))
+  wd=$((delta * w / h))
+  case "$dir" in
+    h) yabai -m window --resize "bottom_right:-${delta}:-${hd}" 2>/dev/null ;;
+    l) yabai -m window --resize "bottom_right:${delta}:${hd}" 2>/dev/null ;;
+    k) yabai -m window --resize "bottom_right:-${wd}:-${delta}" 2>/dev/null ;;
+    j) yabai -m window --resize "bottom_right:${wd}:${delta}" 2>/dev/null ;;
+    *) echo "usage: $0 h|j|k|l" >&2; exit 1 ;;
+  esac
+else
+  case "$dir" in
+    h) yabai -m window --resize "right:-${delta}:0" 2>/dev/null || yabai -m window --resize "left:${delta}:0" 2>/dev/null ;;
+    l) yabai -m window --resize "right:${delta}:0" 2>/dev/null || yabai -m window --resize "left:-${delta}:0" 2>/dev/null ;;
+    k) yabai -m window --resize "bottom:0:-${delta}" 2>/dev/null || yabai -m window --resize "top:0:${delta}" 2>/dev/null ;;
+    j) yabai -m window --resize "bottom:0:${delta}" 2>/dev/null || yabai -m window --resize "top:0:-${delta}" 2>/dev/null ;;
+    *) echo "usage: $0 h|j|k|l" >&2; exit 1 ;;
+  esac
+fi
