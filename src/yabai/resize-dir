@@ -11,7 +11,7 @@ if [ "$is_floating" = "true" ]; then
   # Try single-edge first (works for normal floating windows).
   # If the non-target dimension also changed, the app enforces aspect ratio.
   # Undo and use proportional diagonal instead (preserves ratio).
-  read -r ox oy ow oh <<< "$(echo "$window" | jq -r '.frame | "\(.x|floor) \(.y|floor) \(.w|floor) \(.h|floor)"')"
+  read -r ow oh <<< "$(echo "$window" | jq -r '.frame | "\(.w|floor) \(.h|floor)"')"
 
   case "$dir" in
     h) yabai -m window --resize "right:-${delta}:0" 2>/dev/null || true ;;
@@ -23,22 +23,10 @@ if [ "$is_floating" = "true" ]; then
 
   read -r _ _ nw nh <<< "$(yabai -m query --windows --window | jq -r '.frame | "\(.x|floor) \(.y|floor) \(.w|floor) \(.h|floor)"')"
 
-  # h/l = horizontal → check if height changed. k/j = vertical → check if width changed.
-  need_proportional=0
-  case "$dir" in
-    h|l) if [ "$oh" != "$nh" ]; then need_proportional=1; fi ;;
-    k|j) if [ "$ow" != "$nw" ]; then need_proportional=1; fi ;;
-  esac
-  # Also if resize was fully rejected (no change at all)
-  if [ "$ow" = "$nw" ] && [ "$oh" = "$nh" ]; then need_proportional=1; fi
-
-  if [ "$need_proportional" = "1" ]; then
-    # Undo single-edge if it changed anything
-    if [ "$ow" != "$nw" ] || [ "$oh" != "$nh" ]; then
-      yabai -m window --move "abs:${ox}:${oy}" 2>/dev/null || true
-      yabai -m window --resize "bottom_right:$((ow - nw)):$((oh - nh))" 2>/dev/null || true
-    fi
-    # Proportional diagonal from bottom_right (top-left anchored, preserves ratio)
+  # If single-edge changed anything, keep it - the app handled aspect ratio
+  # adjustment itself (both dims changed proportionally). Only fall back to
+  # proportional diagonal when single-edge was fully rejected (no change).
+  if [ "$ow" = "$nw" ] && [ "$oh" = "$nh" ]; then
     hd=$(echo "$window" | jq -r --argjson d "$delta" '($d * .frame.h / .frame.w) | floor')
     wd=$(echo "$window" | jq -r --argjson d "$delta" '($d * .frame.w / .frame.h) | floor')
     case "$dir" in
